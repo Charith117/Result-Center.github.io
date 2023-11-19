@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style2.css">
+
+    
+   
+</head>
+<body>
+    
+
+    <div class="container">
+        <header class="header">
+            <img src="unilogo.png" alt="University of Vavuniya Logo" class="logo">
+            <div class="title">
+                <h1>Virtual Result Center</h1>
+                <p>University of Vavuniya</p>
+            </div>
+        </header>
+        <hr>
+        <section class="content">
+            <div class="form">
+                <h2>Register</h2>
+                <form id="loginform">
+                    <label for="regnum">Registration Number</label>
+                    <input type="text" id="regnum" name="regnum" required>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                    <label for="usertype">User Type</label>
+                    
+                    <select class="select" id="usertype" name="usertype">
+                        <option value="">Select User Type</option>
+                        <option value="student">Student</option>
+                        <option value="Lecture">Lecture</option>
+                    </select>
+                    <br>
+                    <label for="Faculty">Faculty</label>
+                    <select class="select" id="Faculty" name="Faculty" onchange="populateCourses()">
+
+                        <option value="Faculty of Technological Studies">Faculty of Technological Studies</option>
+                        <option value="Faculty of Business Studies">Faculty of Business Studies</option>
+                        <option value="Faculty of Applied Science">Faculty of Applied Science</option>
+
+
+                    </select>
+                    <label for="course">Degree programmes</label>
+                    <select class="select" id="course" name="course"></select>
+                    <label for="Password">Password</label>
+                    <input type="password" id="Password" name="password" required>
+                    <label for="conpassword">Confirm Password</label>
+                    <input type="password" id="conpassword" name="conpassword" required>
+                    <br>
+                    <button  type="submit">Register</button> 
+                    <button type="reset">Reset</button>
+                </form>
+            </div>
+            <center><p> <a href="index.html"><u>login</u></p> </center>  
+        </section>
+    </div>
+    <footer class="footer">
+        <p class="pad">© 2023 University of Vavuniya. All rights reserved.</p>
+    </footer>
+
+
+    <script type="module"> 
+        import {initializeApp} from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+        import {getFirestore,doc,setDoc} from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+        import {getAuth,createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+
+        const firebaseConfig = {
+  apiKey: "AIzaSyB1KI9SJ42kAc4mIIP3hZfWlEUzvwyp6-A",
+  authDomain: "result-center.firebaseapp.com",
+  databaseURL: "https://result-center-default-rtdb.firebaseio.com",
+  projectId: "result-center",
+  storageBucket: "result-center.appspot.com",
+  messagingSenderId: "64165779818",
+  appId: "1:64165779818:web:e747b855a7c23aa56e2d13",
+  measurementId: "G-C7FJG8VV3N"
+};
+
+
+const app =initializeApp(firebaseConfig);
+const db =getFirestore();
+const auth =getAuth(app);
+
+
+            let regnum = document.getElementById('regnum');
+            let email = document.getElementById('email');
+            let usertype = document.getElementById('usertype');
+            let Faculty = document.getElementById('Faculty');
+            let course = document.getElementById('course');
+            let Password = document.getElementById('Password');
+            let conpassword = document.getElementById('conpassword');
+
+
+let RegisterUser= evt => {
+
+  evt.preventDefault();
+
+  createUserWithEmailAndPassword(auth,email.value,Password.value)
+  .then(async(credentials)=>{
+
+
+    var ref =doc(db,"UserAuthList",credentials.user.uid);
+    await setDoc(ref,{
+        regnum:regnum.value,
+        email:email.value,
+        usertype:usertype.value,
+        Faculty:Faculty.value,
+        course:course.value
+      
+        
+        
+    }) 
+
+    window.location.href='index.html';
+  })
+  .catch((error)=>{
+    alert(error.message);
+    console.log(error.code);
+    console.log(error.message);
+  })
+  
+}
+        loginform.addEventListener('submit',RegisterUser);
+        </script>
+        
+        <script src="Script.js"></script>
+        
+</body>
+</html>

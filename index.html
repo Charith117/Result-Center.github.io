@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+   
+
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <img src="unilogo.png" alt="University of Vavuniya Logo" class="logo">
+            <div class="title">
+                <h1>Virtual Reuslt Center</h1>
+                <p>University of Vavuniya</p>
+            </div>
+            
+        </header>
+        <hr>
+        <section class="content">
+            <div class="form">
+                <h2>Log in</h2>
+                <form id="loginform1">
+                    <label for="username">email</label>
+                    <input type="text" id="email" name="email" required>
+                    <label for="Password">Password</label>
+                    <input type="Password" id="Password" name="Password" required>
+                    <label class="lb2" for="checkbox">Remember me<input class="cheb" type="checkbox"> </label>
+                    <button type="submit">Log in</button>
+                </form>
+           
+                <p><a href="#">Forgot your username or password?</a></p>
+                <p>Dont have account <a href="index2.html"><u>Register</u></p>
+
+               
+                    
+                
+                
+            </div>
+            
+                
+        </section>
+      
+    </div>
+    <footer class="footer">
+      <p class="pad">© 2023 University of Vavuniya. All rights reserved.</p>
+  </footer>
+
+
+
+  
+                <script type="module"> 
+                    import {initializeApp} from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+                    import {getFirestore,doc,getDoc} from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+                    import {getAuth,signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+
+                    const firebaseConfig = {
+                apiKey: "AIzaSyB1KI9SJ42kAc4mIIP3hZfWlEUzvwyp6-A",
+                authDomain: "result-center.firebaseapp.com",
+                databaseURL: "https://result-center-default-rtdb.firebaseio.com",
+                projectId: "result-center",
+                storageBucket: "result-center.appspot.com",
+                messagingSenderId: "64165779818",
+                appId: "1:64165779818:web:e747b855a7c23aa56e2d13",
+                measurementId: "G-C7FJG8VV3N"
+                };
+
+
+const app =initializeApp(firebaseConfig);
+const db =getFirestore();
+const auth =getAuth(app);
+
+
+let loginform = document.getElementById('loginform');
+        let regnum = document.getElementById('regnum');
+        let email = document.getElementById('email');
+        let usertype = document.getElementById('usertype');
+        let Faculty = document.getElementById('Faculty');
+        let course = document.getElementById('course');
+        let Password = document.getElementById('Password');
+        let conpassword = document.getElementById('conpassword');
+
+
+let signInUser= evt => {
+
+evt.preventDefault();
+
+signInWithEmailAndPassword(auth,email.value,Password.value)
+.then(async(credentials)=>{
+    var ref =doc(db,"UserAuthList",credentials.user.uid);
+    const docSnap= await getDoc(ref);
+    if(docSnap.exists()){
+
+
+        sessionStorage.setItem("user-info",JSON.stringify({
+
+            regnum:docSnap.data().regnum,
+            email:docSnap.data().email,
+            usertype:docSnap.data().usertype,
+            Faculty:docSnap.data().Faculty,
+            course:docSnap.data().course
+            
+
+
+
+       
+        } ))
+
+        sessionStorage.setItem("user-creds",JSON.stringify(credentials));
+        window.location.href="home.html";
+    }
+
+
+        })
+                .catch((error)=>{
+                alert(error.message);
+                console.log(error.code);
+                console.log(error.message);
+        })
+       
+}
+
+loginform1.addEventListener('submit',signInUser);
+    </script>
+    
+    <script src="Script.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
